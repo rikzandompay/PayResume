@@ -104,6 +104,12 @@ export function DownloadButton({ namaUser }: DownloadButtonProps) {
       `;
       document.head.appendChild(styleTag);
 
+      // Pastikan width container persis 595px agar PDF full kertas
+      const prevWidth = el.style.width;
+      const prevMargin = el.style.margin;
+      el.style.width = "595px";
+      el.style.margin = "0 auto";
+
       const filename = `${namaUser.toLowerCase().replace(/\s+/g, "-")}-resume-payresume.pdf`;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await html2pdf().set({
@@ -114,11 +120,17 @@ export function DownloadButton({ namaUser }: DownloadButtonProps) {
           scale: 2,
           useCORS: true,
           scrollY: 0,
+          width: 595,
+          windowWidth: 595,
         },
         jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
         pagebreak: { mode: ["css", "legacy"], avoid: ["div", "p", "li", "h2", "ul", "strong"] },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any).from(el).save();
+      
+      // Kembalikan style container
+      el.style.width = prevWidth;
+      el.style.margin = prevMargin;
 
       // Hapus style sementara
       document.getElementById("pdf-temp-style")?.remove();
