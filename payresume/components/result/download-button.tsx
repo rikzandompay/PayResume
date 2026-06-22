@@ -76,73 +76,82 @@ export function DownloadButton({ namaUser }: DownloadButtonProps) {
   const handleDownload = async () => {
     setDownloading(true);
     try {
-      const html2pdf = (await import("html2pdf.js")).default;
+      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
+
       const el = document.getElementById("cv-preview-container");
       if (!el) return;
 
-      // Sementara hapus overflow dari parent agar html2pdf bisa capture semua konten
-      const parent = el.parentElement;
-      const prevOverflow = parent?.style.overflow || "";
-      const prevMaxHeight = parent?.style.maxHeight || "";
-      if (parent) {
-        parent.style.overflow = "visible";
-        parent.style.maxHeight = "none";
-      }
+      // A4 dimensions in points (jsPDF unit)
+      const A4_W_PT = 595.28;
+      const A4_H_PT = 841.89;
+      // A4 in px at 96dpi = 794 x 1123 px
+      const A4_W_PX = 794;
 
-      // Tambahkan style sementara untuk page-break yang benar
-      const styleTag = document.createElement("style");
-      styleTag.id = "pdf-temp-style";
-      styleTag.textContent = `
-        #cv-preview-container * {
-          page-break-inside: avoid !important;
-          break-inside: avoid !important;
-        }
-        #cv-preview-container h2 {
-          page-break-after: avoid !important;
-          break-after: avoid !important;
-        }
+      // Clone element ke container offscreen dengan lebar A4 penuh
+      const wrapper = document.createElement("div");
+      wrapper.style.cssText = `
+        position: fixed; top: -9999px; left: -9999px;
+        width: ${A4_W_PX}px; background: #fff;
+        z-index: -9999; overflow: visible;
       `;
-      document.head.appendChild(styleTag);
+      const clone = el.cloneNode(true) as HTMLElement;
+      // Override width di root div agar mengisi A4 penuh
+      const rootDiv = clone.querySelector("div") as HTMLElement | null;
+      if (rootDiv) {
+        rootDiv.style.width = `${A4_W_PX}px`;
+        rootDiv.style.maxWidth = `${A4_W_PX}px`;
+        rootDiv.style.boxSizing = "border-box";
+      }
+      wrapper.appendChild(clone);
+      document.body.appendChild(wrapper);
 
-      // Pastikan width container persis 595px agar PDF full kertas
-      const prevWidth = el.style.width;
-      const prevMargin = el.style.margin;
-      el.style.width = "595px";
-      el.style.margin = "0 auto";
+      // Capture dengan html2canvas
+      const canvas = await html2canvas(wrapper, {
+        scale: 2,
+        useCORS: true,
+        width: A4_W_PX,
+        windowWidth: A4_W_PX,
+        backgroundColor: "#ffffff",
+      });
+
+      document.body.removeChild(wrapper);
+
+      // Hitung berapa halaman yang dibutuhkan
+      const canvasW = canvas.width;
+      const canvasH = canvas.height;
+      // Rasio px per pt
+      const pxPerPt = canvasW / A4_W_PT;
+      const pageHeightPx = A4_H_PT * pxPerPt;
+      const totalPages = Math.ceil(canvasH / pageHeightPx);
+
+      const pdf = new jsPDF({ unit: "pt", format: "a4", orientation: "portrait" });
+
+      for (let i = 0; i < totalPages; i++) {
+        if (i > 0) pdf.addPage();
+
+        // Crop canvas per halaman
+        const srcY = i * pageHeightPx;
+        const srcH = Math.min(pageHeightPx, canvasH - srcY);
+
+        const pageCanvas = document.createElement("canvas");
+        pageCanvas.width = canvasW;
+        pageCanvas.height = srcH;
+        const ctx = pageCanvas.getContext("2d")!;
+        ctx.drawImage(canvas, 0, srcY, canvasW, srcH, 0, 0, canvasW, srcH);
+
+        const pageImg = pageCanvas.toDataURL("image/jpeg", 0.98);
+        const imgH = (srcH / pxPerPt); // pt
+        pdf.addImage(pageImg, "JPEG", 0, 0, A4_W_PT, imgH);
+      }
 
       const filename = `${namaUser.toLowerCase().replace(/\s+/g, "-")}-resume-payresume.pdf`;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await html2pdf().set({
-        margin: [0, 0, 0, 0],
-        filename,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          scrollY: 0,
-          width: 595,
-          windowWidth: 595,
-        },
-        jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
-        pagebreak: { mode: ["css", "legacy"], avoid: ["div", "p", "li", "h2", "ul", "strong"] },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any).from(el).save();
-      
-      // Kembalikan style container
-      el.style.width = prevWidth;
-      el.style.margin = prevMargin;
-
-      // Hapus style sementara
-      document.getElementById("pdf-temp-style")?.remove();
-
-      // Kembalikan style semula
-      if (parent) {
-        parent.style.overflow = prevOverflow;
-        parent.style.maxHeight = prevMaxHeight;
-      }
+      pdf.save(filename);
 
       track("pdf_downloaded");
-    } catch { /* silent */ } finally { setDownloading(false); }
+    } catch (e) { console.error(e); } finally { setDownloading(false); }
   };
 
   return (
