@@ -89,15 +89,39 @@ export function DownloadButton({ namaUser }: DownloadButtonProps) {
         parent.style.maxHeight = "none";
       }
 
+      // Tambahkan style sementara untuk page-break yang benar
+      const styleTag = document.createElement("style");
+      styleTag.id = "pdf-temp-style";
+      styleTag.textContent = `
+        #cv-preview-container * {
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+        }
+        #cv-preview-container h2 {
+          page-break-after: avoid !important;
+          break-after: avoid !important;
+        }
+      `;
+      document.head.appendChild(styleTag);
+
       const filename = `${namaUser.toLowerCase().replace(/\s+/g, "-")}-resume-payresume.pdf`;
       await html2pdf().set({
-        margin: [8, 0, 8, 0],
+        margin: [0, 0, 0, 0],
         filename,
         image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-        pagebreak: { mode: ["avoid-all", "css", "legacy"] },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          scrollY: 0,
+          width: 595,
+          windowWidth: 595,
+        },
+        jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["css", "legacy"], avoid: ["div", "p", "li", "h2", "ul", "strong"] },
       }).from(el).save();
+
+      // Hapus style sementara
+      document.getElementById("pdf-temp-style")?.remove();
 
       // Kembalikan style semula
       if (parent) {

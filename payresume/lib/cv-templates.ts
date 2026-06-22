@@ -50,7 +50,7 @@ export function generateATSTemplate(data: CVResult): string {
   const skillSoft = data.skillSoft && data.skillSoft.length > 0 ? data.skillSoft.join(", ") : "";
 
   return `
-    <div style="font-family:Arial, Helvetica, sans-serif;font-size:9.4pt;color:#111827;padding:34px 38px;line-height:1.42;width:595px;max-width:595px;box-sizing:border-box;background:#fff;margin:0 auto;text-align:left;overflow:hidden;overflow-wrap:anywhere;word-break:normal;">
+    <div style="font-family:Arial, Helvetica, sans-serif;font-size:9.4pt;color:#111827;padding:34px 38px;line-height:1.42;width:595px;max-width:595px;box-sizing:border-box;background:#fff;margin:0 auto;text-align:left;overflow:visible;overflow-wrap:anywhere;word-break:normal;">
       
       <!-- HEADER -->
       <div style="display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:20px;min-width:0;">
@@ -89,7 +89,7 @@ export function generateATSTemplate(data: CVResult): string {
       ${
         data.pengalaman.length > 0
           ? `
-        <div style="margin-bottom:18px;">
+        <div style="margin-bottom:18px;page-break-inside:avoid;break-inside:avoid;">
           <h2 style="font-size:10.5pt;font-weight:800;color:#111827;border-bottom:1px solid #d1d5db;padding-bottom:5px;margin:0 0 12px 0;letter-spacing:.4px;text-transform:uppercase;">Pengalaman</h2>
           ${pengalamanHTML}
         </div>
@@ -101,7 +101,7 @@ export function generateATSTemplate(data: CVResult): string {
       ${
         data.pendidikan.length > 0
           ? `
-        <div style="margin-bottom:18px;">
+        <div style="margin-bottom:18px;page-break-inside:avoid;break-inside:avoid;">
           <h2 style="font-size:10.5pt;font-weight:800;color:#111827;border-bottom:1px solid #d1d5db;padding-bottom:5px;margin:0 0 12px 0;letter-spacing:.4px;text-transform:uppercase;">Pendidikan</h2>
           ${pendidikanHTML}
         </div>
@@ -113,7 +113,7 @@ export function generateATSTemplate(data: CVResult): string {
       ${
         data.sertifikasi.length > 0
           ? `
-        <div style="margin-bottom:18px;">
+        <div style="margin-bottom:18px;page-break-inside:avoid;break-inside:avoid;">
           <h2 style="font-size:10.5pt;font-weight:800;color:#111827;border-bottom:1px solid #d1d5db;padding-bottom:5px;margin:0 0 12px 0;letter-spacing:.4px;text-transform:uppercase;">Lisensi dan Sertifikasi</h2>
           ${sertifikasiHTML}
         </div>
@@ -125,7 +125,7 @@ export function generateATSTemplate(data: CVResult): string {
       ${
         (skillTeknis || skillSoft)
           ? `
-        <div style="margin-bottom:18px;">
+        <div style="margin-bottom:18px;page-break-inside:avoid;break-inside:avoid;">
           <h2 style="font-size:10.5pt;font-weight:800;color:#111827;border-bottom:1px solid #d1d5db;padding-bottom:5px;margin:0 0 12px 0;letter-spacing:.4px;text-transform:uppercase;">Keahlian</h2>
           ${skillTeknis ? `<div style="margin-bottom:7px;font-size:9pt;color:#4b5563;overflow-wrap:anywhere;"><span style="color:#111827;font-weight:700;">Hard Skills:</span> ${skillTeknis}</div>` : ""}
           ${skillSoft ? `<div style="margin-bottom:7px;font-size:9pt;color:#4b5563;overflow-wrap:anywhere;"><span style="color:#111827;font-weight:700;">Soft Skills:</span> ${skillSoft}</div>` : ""}
@@ -186,7 +186,7 @@ export function generateModernTemplate(data: CVResult): string {
     .join("");
 
   return `
-    <div style="font-family:Arial, Helvetica, sans-serif;width:595px;max-width:595px;background:#fff;margin:0 auto;text-align:left;overflow:hidden;overflow-wrap:anywhere;color:#111827;">
+    <div style="font-family:Arial, Helvetica, sans-serif;width:595px;max-width:595px;background:#fff;margin:0 auto;text-align:left;overflow:visible;overflow-wrap:anywhere;color:#111827;">
       
       <!-- TOP HEADER -->
       <div style="background:#111827;color:#f8fafc;padding:34px 38px;display:flex;justify-content:space-between;gap:18px;align-items:flex-start;min-width:0;">
@@ -214,28 +214,28 @@ export function generateModernTemplate(data: CVResult): string {
       <div style="padding:30px 38px;font-size:9pt;line-height:1.45;">
         
         ${data.ringkasanProfil ? `
-          <div style="margin-bottom:22px;">
+          <div style="margin-bottom:22px;page-break-inside:avoid;break-inside:avoid;">
             <h2 style="font-size:10.4pt;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#111827;border-bottom:1px solid #e5e7eb;padding-bottom:5px;margin:0 0 10px 0;">Profil Profesional</h2>
             <p style="font-size:9pt;line-height:1.45;color:#334155;margin:0;text-align:left;overflow-wrap:anywhere;">${data.ringkasanProfil}</p>
           </div>
         ` : ""}
 
         ${data.pengalaman.length > 0 ? `
-          <div style="margin-bottom:24px;">
+          <div style="margin-bottom:24px;page-break-inside:avoid;break-inside:avoid;">
             <h2 style="font-size:10.4pt;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#111827;border-bottom:1px solid #e5e7eb;padding-bottom:5px;margin:0 0 14px 0;">Pengalaman Kerja</h2>
             ${pengalamanHTML}
           </div>
         ` : ""}
 
         ${data.pendidikan.length > 0 ? `
-          <div style="margin-bottom:22px;">
+          <div style="margin-bottom:22px;page-break-inside:avoid;break-inside:avoid;">
             <h2 style="font-size:10.4pt;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#111827;border-bottom:1px solid #e5e7eb;padding-bottom:5px;margin:0 0 12px 0;">Pendidikan</h2>
             ${pendidikanHTML}
           </div>
         ` : ""}
 
         ${(skillHTML || softSkillHTML) ? `
-          <div style="margin-bottom:22px;">
+          <div style="margin-bottom:22px;page-break-inside:avoid;break-inside:avoid;">
             <h2 style="font-size:10.4pt;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#111827;border-bottom:1px solid #e5e7eb;padding-bottom:5px;margin:0 0 10px 0;">Keahlian</h2>
             ${skillHTML ? `<p style="font-size:8.9pt;line-height:1.45;color:#334155;margin:0 0 6px 0;overflow-wrap:anywhere;"><strong style="color:#111827;">Hard Skills:</strong> ${skillHTML}</p>` : ""}
             ${softSkillHTML ? `<p style="font-size:8.9pt;line-height:1.45;color:#334155;margin:0;overflow-wrap:anywhere;"><strong style="color:#111827;">Soft Skills:</strong> ${softSkillHTML}</p>` : ""}
@@ -243,7 +243,7 @@ export function generateModernTemplate(data: CVResult): string {
         ` : ""}
         
         ${data.sertifikasi.length > 0 ? `
-          <div style="margin-bottom:22px;">
+          <div style="margin-bottom:22px;page-break-inside:avoid;break-inside:avoid;">
             <h2 style="font-size:10.4pt;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#111827;border-bottom:1px solid #e5e7eb;padding-bottom:5px;margin:0 0 12px 0;">Sertifikasi</h2>
             ${sertifikasiHTML}
           </div>
