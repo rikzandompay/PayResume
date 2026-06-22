@@ -1,0 +1,355 @@
+
+> payresume@0.1.0 dev
+> next dev -p 3000
+
+▲ Next.js 16.2.9 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.100.157:3000
+- Environments: .env.local
+✓ Ready in 264ms
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /home/rikzan24_/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /home/rikzan24_/PayResume/payresume/package-lock.json
+
+
+ GET / 200 in 396ms (next.js: 119ms, application-code: 277ms)
+ GET / 200 in 107ms (next.js: 25ms, application-code: 82ms)
+ GET / 200 in 51ms (next.js: 3ms, application-code: 48ms)
+ GET / 200 in 29ms (next.js: 1925µs, application-code: 27ms)
+ GET /rebuild-cv 200 in 85ms (next.js: 17ms, application-code: 68ms)
+[browser] Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/rebuild-cv" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head headCacheNode={{rsc:{...}, ...}}>
+                    <__next_viewport_boundary__>
+                    <MetadataWrapper>
+                      <div
++                       hidden={true}
+-                       hidden={null}
+-                       className="simulator-pre-loader simulator"
+-                       aria-label="Loading"
+-                       role="status"
+                      >
+                        <__next_metadata_boundary__>
++                         <Suspense name="Next.Metadata">
+                    ...
+                  ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at Suspense (<anonymous>)
+ GET /rebuild-cv 200 in 44ms (next.js: 2ms, application-code: 42ms)
+Gemini API Error Detail: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.
+Rebuild CV error: Error: Gemini API Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent: [404 Not Found] models/gemini-pro is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.
+    at generateWithGemini (lib/gemini.ts:17:11)
+    at async POST (app/api/rebuild-cv/route.ts:97:22)
+  15 |   } catch (error: any) {
+  16 |     console.error("Gemini API Error Detail:", error?.message || error);
+> 17 |     throw new Error(`Gemini API Error: ${error?.message || "Terjadi kesalahan internal AI"...
+     |           ^
+  18 |   }
+  19 | }
+  20 |
+ POST /api/rebuild-cv 500 in 746ms (next.js: 274ms, application-code: 472ms)
+Gemini API Error Detail: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-latest:generateContent: [429 Too Many Requests] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+Please retry in 57.123197897s. [{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Learn more about Gemini API quotas","url":"https://ai.google.dev/gemini-api/docs/rate-limits"}]},{"@type":"type.googleapis.com/google.rpc.QuotaFailure","violations":[{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerDayPerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerMinutePerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerMinute-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerDay-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}}]},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"57s"}]
+Rebuild CV error: Error: Gemini API Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-latest:generateContent: [429 Too Many Requests] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+Please retry in 57.123197897s. [{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Learn more about Gemini API quotas","url":"https://ai.google.dev/gemini-api/docs/rate-limits"}]},{"@type":"type.googleapis.com/google.rpc.QuotaFailure","violations":[{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerDayPerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerMinutePerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerMinute-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerDay-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}}]},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"57s"}]
+    at generateWithGemini (lib/gemini.ts:17:11)
+    at async POST (app/api/rebuild-cv/route.ts:97:22)
+  15 |   } catch (error: any) {
+  16 |     console.error("Gemini API Error Detail:", error?.message || error);
+> 17 |     throw new Error(`Gemini API Error: ${error?.message || "Terjadi kesalahan internal AI"...
+     |           ^
+  18 |   }
+  19 | }
+  20 |
+ POST /api/rebuild-cv 500 in 431ms (next.js: 3ms, application-code: 428ms)
+ GET /rebuild-cv 200 in 60ms (next.js: 3ms, application-code: 58ms)
+ GET /rebuild-cv 200 in 42ms (next.js: 3ms, application-code: 40ms)
+Gemini API Error Detail: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-latest:generateContent: [429 Too Many Requests] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+Please retry in 27.726184211s. [{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Learn more about Gemini API quotas","url":"https://ai.google.dev/gemini-api/docs/rate-limits"}]},{"@type":"type.googleapis.com/google.rpc.QuotaFailure","violations":[{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerDay-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerDayPerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerMinutePerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerMinute-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}}]},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"27s"}]
+Rebuild CV error: Error: Gemini API Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-latest:generateContent: [429 Too Many Requests] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+Please retry in 27.726184211s. [{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Learn more about Gemini API quotas","url":"https://ai.google.dev/gemini-api/docs/rate-limits"}]},{"@type":"type.googleapis.com/google.rpc.QuotaFailure","violations":[{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerDay-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerDayPerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerMinutePerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerMinute-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}}]},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"27s"}]
+    at generateWithGemini (lib/gemini.ts:17:11)
+    at async POST (app/api/rebuild-cv/route.ts:97:22)
+  15 |   } catch (error: any) {
+  16 |     console.error("Gemini API Error Detail:", error?.message || error);
+> 17 |     throw new Error(`Gemini API Error: ${error?.message || "Terjadi kesalahan internal AI"...
+     |           ^
+  18 |   }
+  19 | }
+  20 |
+ POST /api/rebuild-cv 500 in 325ms (next.js: 1877µs, application-code: 323ms)
+Gemini API Error Detail: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.
+Rebuild CV error: Error: Gemini API Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ModelService.ListModels to see the list of available models and their supported methods.
+    at generateWithGemini (lib/gemini.ts:17:11)
+    at async POST (app/api/rebuild-cv/route.ts:97:22)
+  15 |   } catch (error: any) {
+  16 |     console.error("Gemini API Error Detail:", error?.message || error);
+> 17 |     throw new Error(`Gemini API Error: ${error?.message || "Terjadi kesalahan internal AI"...
+     |           ^
+  18 |   }
+  19 | }
+  20 |
+ POST /api/rebuild-cv 500 in 315ms (next.js: 2ms, application-code: 313ms)
+ POST /api/rebuild-cv 200 in 21.4s (next.js: 2ms, application-code: 21.4s)
+ GET /result 200 in 57ms (next.js: 31ms, application-code: 26ms)
+Gemini API Error Detail: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-latest:generateContent: [429 Too Many Requests] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+Please retry in 39.416416716s. [{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Learn more about Gemini API quotas","url":"https://ai.google.dev/gemini-api/docs/rate-limits"}]},{"@type":"type.googleapis.com/google.rpc.QuotaFailure","violations":[{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerMinute-FreeTier","quotaDimensions":{"model":"gemini-3.1-pro","location":"global"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerMinutePerProjectPerModel-FreeTier","quotaDimensions":{"model":"gemini-3.1-pro","location":"global"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerDayPerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerDay-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}}]},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"39s"}]
+Rebuild CV error: Error: Gemini API Error: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-latest:generateContent: [429 Too Many Requests] You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-3.1-pro
+Please retry in 39.416416716s. [{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Learn more about Gemini API quotas","url":"https://ai.google.dev/gemini-api/docs/rate-limits"}]},{"@type":"type.googleapis.com/google.rpc.QuotaFailure","violations":[{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerMinute-FreeTier","quotaDimensions":{"model":"gemini-3.1-pro","location":"global"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerMinutePerProjectPerModel-FreeTier","quotaDimensions":{"model":"gemini-3.1-pro","location":"global"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_requests","quotaId":"GenerateRequestsPerDayPerProjectPerModel-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}},{"quotaMetric":"generativelanguage.googleapis.com/generate_content_free_tier_input_token_count","quotaId":"GenerateContentInputTokensPerModelPerDay-FreeTier","quotaDimensions":{"location":"global","model":"gemini-3.1-pro"}}]},{"@type":"type.googleapis.com/google.rpc.RetryInfo","retryDelay":"39s"}]
+    at generateWithGemini (lib/gemini.ts:17:11)
+    at async POST (app/api/rebuild-cv/route.ts:97:22)
+  15 |   } catch (error: any) {
+  16 |     console.error("Gemini API Error Detail:", error?.message || error);
+> 17 |     throw new Error(`Gemini API Error: ${error?.message || "Terjadi kesalahan internal AI"...
+     |           ^
+  18 |   }
+  19 | }
+  20 |
+ POST /api/rebuild-cv 500 in 296ms (next.js: 1986µs, application-code: 294ms)
+ GET /rebuild-cv 200 in 37ms (next.js: 3ms, application-code: 34ms)
+ GET /rebuild-cv 200 in 42ms (next.js: 1763µs, application-code: 40ms)
+[browser] Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/rebuild-cv" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head headCacheNode={{rsc:{...}, ...}}>
+                    <__next_viewport_boundary__>
+                    <MetadataWrapper>
++                     <div hidden={true}>
+-                     {"\n        "}
+                    ...
+                  ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at div (<anonymous>)
+[browser] Uncaught NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117171)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117768)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118750)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:122176)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:121184)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:119002)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:119002)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:121184)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:119002)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:121184)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:121184)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:119002)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:121184)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:119002)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:121184)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:119002)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:121184)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:121184)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:119002)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:119002)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:119002)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:119002)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:122459)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:122086)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:119002)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:123428)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118876)
+[browser] Uncaught NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at <unknown> (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1890:55)
+    at lb (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:103375)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117479)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117503)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118750)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:121630)
+    at c_ (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:154382)
+    at <unknown> (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:154069)
+    at cy (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:154085)
+    at cr (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:137223)
+    at ct (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:135459)
+    at cq (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:160794)
+    at cU (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:159007)
+    at ck (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:156653)
+    at <unknown> (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:154079)
+    at cy (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:154085)
+    at cr (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:137223)
+    at ct (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:135459)
+    at cB (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:160673)
+    at MessagePort.N (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:224252)
+[browser] Uncaught NotFoundError: Failed to execute 'removeChild' on 'Node': The node to be removed is not a child of this node.
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117109)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117503)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117503)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117503)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117503)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117696)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117638)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117503)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117638)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117638)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117768)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117503)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117503)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117422)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117503)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117503)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117638)
+    at l7 (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:116531)
+    at se (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:117503)
+    at so (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:118750)
+    at si (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:121630)
+    at c_ (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:154382)
+    at <unknown> (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:154069)
+    at cy (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:154085)
+    at cr (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:137223)
+    at ct (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:135459)
+    at cq (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:160794)
+    at cU (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:159007)
+    at ck (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:156653)
+    at <unknown> (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:154079)
+    at cy (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:154085)
+    at cr (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:137223)
+    at ct (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:135459)
+    at cB (file:///home/rikzan24_/PayResume/payresume/.next/dev/static/chunks/04dz_next_dist_compiled_next-devtools_index_1he9rbr.js:1841:160673)
+ GET /rebuild-cv 200 in 52ms (next.js: 1382µs, application-code: 51ms)
+[browser] Uncaught Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/rebuild-cv" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head headCacheNode={{rsc:{...}, ...}}>
+                    <__next_viewport_boundary__>
+                    <MetadataWrapper>
+                      <div
++                       hidden={true}
+-                       hidden={null}
+-                       className="simulator-pre-loader simulator"
+-                       aria-label="Loading"
+-                       role="status"
+                      >
+                        <__next_metadata_boundary__>
++                         <Suspense name="Next.Metadata">
+                    ...
+                  ...
+
+    at <unknown> (https://react.dev/link/hydration-mismatch)
+    at Suspense (<anonymous>)
+ GET /rebuild-cv 200 in 54ms (next.js: 3ms, application-code: 51ms)
+ POST /api/rebuild-cv 200 in 6.3s (next.js: 5ms, application-code: 6.3s)
+ GET /result 200 in 20ms (next.js: 3ms, application-code: 17ms)
+[?25h

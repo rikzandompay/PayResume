@@ -1,0 +1,123 @@
+===================================================================
+DOKUMENTASI STRUKTUR DAN ARSITEKTUR KODE PROYEK "PAYRESUME"
+===================================================================
+
+Proyek PayResume adalah aplikasi web berbasis Artificial Intelligence (AI) yang berfungsi sebagai "AI Resume Builder". Aplikasi ini memungkinkan pengguna untuk membuat Curriculum Vitae (CV) dari awal atau memperbarui (rebuild) CV lama agar lebih ramah terhadap sistem pelacakan pelamar (ATS-friendly) menggunakan teknologi pemrosesan bahasa alami dari Google Gemini API.
+
+Aplikasi ini dibangun menggunakan arsitektur modern Next.js 15+ dengan pendekatan "App Router", yang memisahkan komponen klien (Client Components) untuk interaktivitas UI dan komponen server (Server Components/API Routes) untuk keamanan pemrosesan data dan integrasi API pihak ketiga.
+
+Berikut adalah penjelasan komprehensif dari setiap struktur folder, file, dan fungsi-fungsinya:
+
+-------------------------------------------------------------------
+1. DIREKTORI ROOT (File Konfigurasi Utama)
+-------------------------------------------------------------------
+- package.json          : Menyimpan daftar dependensi (library) yang digunakan dalam proyek seperti React, Next.js, Tailwind CSS, html2pdf.js, pdf-parse, zod, dan @google/generative-ai.
+- next.config.ts        : File konfigurasi utama Next.js. Mengatur aturan kompilasi, environment, atau fungsi eksperimental.
+- tailwind.config.js / postcss.config.mjs : Mengatur konfigurasi styling Tailwind CSS versi 4 yang mendikte skema warna (kuning, biru, hitam gaya Brutalist).
+- .env.local            : (Git-ignored) Menyimpan variabel rahasia seperti kunci `GEMINI_API_KEY`.
+
+-------------------------------------------------------------------
+2. DIREKTORI `app/` (Routing dan Halaman Utama)
+-------------------------------------------------------------------
+Direktori ini merupakan fondasi navigasi Next.js (berbasis file-system routing). Setiap folder di dalamnya merepresentasikan rute (URL) yang bisa diakses pengguna.
+
+- app/layout.tsx        : Cangkang utama (Root Layout) aplikasi. Di sini kita menaruh font (Space Grotesk & Inter), Navbar, Footer, serta meta-data SEO dasar yang akan membungkus seluruh halaman aplikasi.
+- app/globals.css       : Menyimpan CSS global aplikasi. Termasuk CSS murni untuk komponen Brutalist (tombol bergaris tebal, bayangan hitam) dan aturan responsif khusus (seperti logika `zoom: 0.6` agar dokumen A4 dapat terlihat rapi di layar HP).
+- app/page.tsx          : Rute utama `/` (Landing Page). Halaman pertama yang dikunjungi pengguna, menampilkan promosi produk, cara kerja, fitur unggulan, dan FAQ.
+- app/create-cv/        : Rute `/create-cv`. Menampilkan antarmuka "Wizard" atau formulir bertahap (5 langkah) untuk membuat CV secara manual.
+- app/rebuild-cv/       : Rute `/rebuild-cv`. Halaman di mana pengguna mengunggah file PDF (CV Lama) dan memasukkan teks lowongan kerja (Job Description) untuk dirombak ulang oleh AI.
+- app/result/           : Rute `/result`. Halaman krusial tempat "Preview CV" yang sudah jadi ditampilkan bersamaan dengan panel "ATS Score & Saran", tombol unduh PDF, dan tombol "Kembali Edit".
+
+-------------------------------------------------------------------
+3. DIREKTORI `app/api/` (Backend / Serverless Functions)
+-------------------------------------------------------------------
+Direktori ini bertindak sebagai backend server yang menangani logika pemrosesan data yang sensitif dan berat, memastikan API Key aman karena dijalankan di server Next.js (Node.js).
+
+- app/api/generate-cv/route.ts :
+  Fungsi : Menerima data dari formulir `create-cv`.
+  Alur   : Menerima JSON profil pengguna -> Merangkai instruksi/prompt khusus -> Mengirim ke Gemini API -> Menerima struktur JSON CV dari Gemini -> Mengembalikannya ke klien web.
+  Penting: Terdapat logika agar AI tidak melakukan "Halusinasi" (mengarang bebas) skill IT untuk pengguna dari jurusan non-IT.
+
+- app/api/rebuild-cv/route.ts :
+  Fungsi : Memproses pembaruan CV lama berdasarkan Job Description (JD).
+  Alur   : Menerima FormData berupa file PDF dan string JD -> `pdf-parse` mengekstrak teks PDF secara raw -> Teks dikirim ke Gemini beserta JD -> Gemini menulis ulang kalimat menggunakan metode STAR dan keyword JD tanpa mengubah fakta asli -> Mereturn JSON struktur CV baru.
+
+- app/api/ai-assist/route.ts :
+  Fungsi : Endpoint pembantu kecil. Ketika pengguna buntu menulis deskripsi kerja, mereka memberikan "Nama Jabatan" dan "Perusahaan", lalu API ini menyuruh Gemini untuk membuat draf deskripsi pekerjaan profesional.
+
+-------------------------------------------------------------------
+4. DIREKTORI `components/` (Komponen User Interface / Antarmuka)
+-------------------------------------------------------------------
+Semua elemen visual dipisah-pisah (dimodularisasi) ke dalam folder ini agar dapat digunakan ulang dan kode lebih mudah dikelola.
+
+- components/layout/    :
+  - navbar.tsx          : Bar navigasi atas, memuat logo dan link rute utama.
+  - footer.tsx          : Bagian bawah web, berisi link terkait legalitas dan kontak.
+
+- components/landing/   :
+  - hero.tsx            : Bagian paling atas landing page dengan Headline besar dan tombol Call-to-Action.
+  - how-it-works.tsx    : Penjelasan alur aplikasi.
+
+- components/create-cv/ :
+  - step-indicator.tsx  : Indikator tahapan visual (misal: Step 2 dari 5).
+  - step-1-personal.tsx hingga step-5-preferences.tsx : Formulir spesifik per halaman (memanfaatkan `react-hook-form` untuk penangkapan data dan Zod untuk peringatan jika ada input kosong/salah ketik).
+
+- components/rebuild-cv/:
+  - pdf-upload.tsx      : Area seret-dan-lepas (Drag & Drop) untuk mengunggah file CV PDF lama.
+  - jd-input.tsx        : Kotak teks untuk menempel (paste) deskripsi lowongan kerja.
+
+- components/result/    :
+  - cv-preview.tsx      : Komponen kontainer "A4" yang akan me-render template HTML murni dari data CV.
+  - ats-panel.tsx       : Menampilkan analisis visual beruoa donat/chart nilai ATS (0-100) dan poin-poin saran dari Gemini.
+  - download-button.tsx : Mengubah elemen HTML "cv-preview" menjadi file PDF fisik menggunakan library `html2pdf.js`. Termasuk fungsi memunculkan jendela pop-up pratinjau (Preview) Blob HTML.
+
+-------------------------------------------------------------------
+5. DIREKTORI `lib/` (Layanan Utama & Fungsi Pendukung)
+-------------------------------------------------------------------
+Pusat dari algoritma pemrosesan, di mana kita menghubungkan logika pihak ketiga dengan aplikasi kita.
+
+- lib/gemini.ts         : 
+  Inti integrasi AI. Menginisialisasi `GoogleGenerativeAI` menggunakan SDK `@google/generative-ai`. Berisi fungsi abstraksi `generateWithGemini(prompt)` dan fungsi pembersih teks `parseAIResponse(text)` untuk memastikan string yang diterima dari AI dikonversi dengan aman menjadi JSON Object JavaScript yang valid.
+
+- lib/pdf-parser.ts     :
+  Membungkus pustaka `pdf-parse`. Menerima buffer dari unggahan file pengguna, lalu mengubah halaman demi halaman PDF menjadi string teks biasa agar mudah dibaca oleh AI.
+
+- lib/cv-templates.ts   :
+  Sangat krusial. File ini tidak menggunakan React/JSX, melainkan fungsi yang mengembalikan (return) `string HTML murni` yang diisi oleh data variabel pengguna.
+  Fungsi-fungsi seperti `generateATSTemplate(data)` dan `generateModernTemplate(data)` menjamin CV dirender dalam format yang sangat stabil ketika nanti ditangkap oleh `html2pdf.js` untuk diekspor menjadi PDF (karena html2pdf lebih stabil menangkap CSS inline/HTML primitif daripada komponen modern React).
+
+- lib/validations.ts    :
+  Menyimpan semua skema Zod. Memastikan bahwa email harus valid, IPK harus angka 0-4, dan field wajib tidak boleh terlewati saat pengguna submit formulir "Create CV".
+
+- lib/types.ts          :
+  Tempat di mana `Interface` TypeScript untuk seluruh aplikasi dideklarasikan. Sangat penting agar seluruh file satu bahasa mengenai bagaimana bentuk struktur objek CV (misalnya, property "namaLengkap" adalah string, "pendidikan" adalah Array, dll).
+
+-------------------------------------------------------------------
+6. ALUR KERJA APLIKASI (WORKFLOW)
+-------------------------------------------------------------------
+
+A. Alur "Create CV" (Membuat Baru)
+   1. User masuk ke `/create-cv`.
+   2. User mengisi formulir Step 1 hingga 5. Setiap kali pindah tahapan, data disimpan secara lokal di browser (`sessionStorage`).
+   3. Pada Step 5, ketika ditekan "Generate", data JSON lokal dikirim via POST ke `/api/generate-cv`.
+   4. Server menyusun instruksi untuk Gemini API berdasarkan JSON, memintanya menyempurnakan gaya bahasa agar terlihat pro.
+   5. Server mereturn Object JSON CV yang diformat.
+   6. Data disimpan di Session dan pengguna dialihkan (redirect) ke halaman `/result`.
+
+B. Alur "Rebuild CV" (Perombakan CV Lama)
+   1. User masuk ke `/rebuild-cv`.
+   2. User mengunggah PDF lama, memilih preferensi gaya (ATS/Modern), dan memasukkan teks Job Description.
+   3. File dikirim ke `/api/rebuild-cv` sebagai FormData.
+   4. Node.js menggunakan `pdf-parse` untuk membaca isi PDF sebagai raw teks.
+   5. Raw teks dan Job Description dimasukkan ke prompt ketat Gemini AI agar menulis ulang poin pengalaman sesuai dengan keyword JD.
+   6. Server mereturn Object JSON CV hasil optimasi.
+   7. Pengguna diarahkan ke `/result` untuk mengunduh hasil PDF tersebut.
+
+C. Fitur Modifikasi (Kembali Edit & Generate Ulang)
+   Di halaman `/result`:
+   - "Kembali Edit": Membawa user kembali ke form Step 5 (Create CV) dengan state sebelumnya yang dipertahankan.
+   - "Generate Ulang": Menghapus riwayat `sessionStorage` sama sekali, me-reset form menjadi kosong dan memulai ulang dari Step 1.
+
+===================================================================
+DOKUMEN INI ADALAH PANDUAN TEKNIS REFERENSI UNTUK TIM PENGEMBANG
+===================================================================
