@@ -105,6 +105,7 @@ export function DownloadButton({ namaUser }: DownloadButtonProps) {
       document.head.appendChild(styleTag);
 
       const filename = `${namaUser.toLowerCase().replace(/\s+/g, "-")}-resume-payresume.pdf`;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       await html2pdf().set({
         margin: [0, 0, 0, 0],
         filename,
@@ -113,12 +114,11 @@ export function DownloadButton({ namaUser }: DownloadButtonProps) {
           scale: 2,
           useCORS: true,
           scrollY: 0,
-          width: 595,
-          windowWidth: 595,
         },
         jsPDF: { unit: "pt", format: "a4", orientation: "portrait" },
         pagebreak: { mode: ["css", "legacy"], avoid: ["div", "p", "li", "h2", "ul", "strong"] },
-      }).from(el).save();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any).from(el).save();
 
       // Hapus style sementara
       document.getElementById("pdf-temp-style")?.remove();
