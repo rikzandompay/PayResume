@@ -75,83 +75,108 @@ export function DownloadButton({ namaUser }: DownloadButtonProps) {
 
   const handleDownload = async () => {
     setDownloading(true);
-    try {
-      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
-        import("html2canvas"),
-        import("jspdf"),
-      ]);
 
+    let pdfRoot: HTMLDivElement | null = null;
+    let styleTag: HTMLStyleElement | null = null;
+
+    try {
+      const html2pdf = (await import("html2pdf.js")).default;
       const el = document.getElementById("cv-preview-container");
       if (!el) return;
 
-      // A4 dimensions in points (jsPDF unit)
-      const A4_W_PT = 595.28;
-      const A4_H_PT = 841.89;
-      // A4 in px at 96dpi = 794 x 1123 px
-      const A4_W_PX = 794;
-
-      // Clone element ke container offscreen dengan lebar A4 penuh
-      const wrapper = document.createElement("div");
-      wrapper.style.cssText = `
-        position: fixed; top: -9999px; left: -9999px;
-        width: ${A4_W_PX}px; background: #fff;
-        z-index: -9999; overflow: visible;
-      `;
-      const clone = el.cloneNode(true) as HTMLElement;
-      // Override width di root div agar mengisi A4 penuh
-      const rootDiv = clone.querySelector("div") as HTMLElement | null;
-      if (rootDiv) {
-        rootDiv.style.width = `${A4_W_PX}px`;
-        rootDiv.style.maxWidth = `${A4_W_PX}px`;
-        rootDiv.style.boxSizing = "border-box";
-      }
-      wrapper.appendChild(clone);
-      document.body.appendChild(wrapper);
-
-      // Capture dengan html2canvas
-      const canvas = await html2canvas(wrapper, {
-        scale: 2,
-        useCORS: true,
-        width: A4_W_PX,
-        windowWidth: A4_W_PX,
-        backgroundColor: "#ffffff",
-      });
-
-      document.body.removeChild(wrapper);
-
-      // Hitung berapa halaman yang dibutuhkan
-      const canvasW = canvas.width;
-      const canvasH = canvas.height;
-      // Rasio px per pt
-      const pxPerPt = canvasW / A4_W_PT;
-      const pageHeightPx = A4_H_PT * pxPerPt;
-      const totalPages = Math.ceil(canvasH / pageHeightPx);
-
-      const pdf = new jsPDF({ unit: "pt", format: "a4", orientation: "portrait" });
-
-      for (let i = 0; i < totalPages; i++) {
-        if (i > 0) pdf.addPage();
-
-        // Crop canvas per halaman
-        const srcY = i * pageHeightPx;
-        const srcH = Math.min(pageHeightPx, canvasH - srcY);
-
-        const pageCanvas = document.createElement("canvas");
-        pageCanvas.width = canvasW;
-        pageCanvas.height = srcH;
-        const ctx = pageCanvas.getContext("2d")!;
-        ctx.drawImage(canvas, 0, srcY, canvasW, srcH, 0, 0, canvasW, srcH);
-
-        const pageImg = pageCanvas.toDataURL("image/jpeg", 0.98);
-        const imgH = (srcH / pxPerPt); // pt
-        pdf.addImage(pageImg, "JPEG", 0, 0, A4_W_PT, imgH);
-      }
-
       const filename = `${namaUser.toLowerCase().replace(/\s+/g, "-")}-resume-payresume.pdf`;
-      pdf.save(filename);
+
+      // Render PDF dari clone khusus supaya ukuran kertas tidak ikut style preview
+      // seperti border, shadow, max-height, overflow, atau zoom dari halaman.
+      pdfRoot = document.createElement("div");
+      pdfRoot.id = "pdf-render-root";
+      pdfRoot.setAttribute("aria-hidden", "true");
+      pdfRoot.style.position = "fixed";
+      pdfRoot.style.left = "-10000px";
+      pdfRoot.style.top = "0";
+      pdfRoot.style.width = "595px";
+      pdfRoot.style.minHeight = "842px";
+      pdfRoot.style.margin = "0";
+      pdfRoot.style.padding = "0";
+      pdfRoot.style.background = "#ffffff";
+      pdfRoot.style.overflow = "visible";
+
+      const clonedCv = el.cloneNode(true) as HTMLElement;
+      clonedCv.id = "pdf-cv-container";
+      clonedCv.style.width = "595px";
+      clonedCv.style.minHeight = "842px";
+      clonedCv.style.margin = "0";
+      clonedCv.style.padding = "0";
+      clonedCv.style.background = "#ffffff";
+      clonedCv.style.overflow = "visible";
+
+      pdfRoot.appendChild(clonedCv);
+      document.body.appendChild(pdfRoot);
+
+      // Style khusus PDF: full A4, tanpa margin browser, dan page break seperlunya.
+      styleTag = document.createElement("style");
+      styleTag.id = "pdf-temp-style";
+      styleTag.textContent = `
+        @page { size: A4; margin: 0; }
+        #pdf-render-root,
+        #pdf-cv-container {
+          width: 595px !important;
+          min-height: 842px !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          background: #ffffff !important;
+          box-sizing: border-box !important;
+          overflow: visible !important;
+        }
+        #pdf-cv-container > div,
+        #pdf-cv-container > div > div {
+          width: 595px !important;
+          max-width: 595px !important;
+          margin: 0 !important;
+          box-sizing: border-box !important;
+        }
+        #pdf-cv-container h1,
+        #pdf-cv-container h2,
+        #pdf-cv-container h3 {
+          page-break-after: avoid !important;
+          break-after: avoid !important;
+        }
+        #pdf-cv-container section,
+        #pdf-cv-container ul,
+        #pdf-cv-container li {
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+        }
+      `;
+      document.head.appendChild(styleTag);
+
+      // A4 dalam point: 595.28 × 841.89. Width clone disamakan 595px
+      // supaya html2pdf tidak mengecilkan layout dan hasilnya memenuhi halaman.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await html2pdf().set({
+        margin: 0,
+        filename,
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          scrollX: 0,
+          scrollY: 0,
+          width: 595,
+          windowWidth: 595,
+        },
+        jsPDF: { unit: "pt", format: [595.28, 841.89], orientation: "portrait" },
+        pagebreak: { mode: ["css", "legacy"], avoid: ["section", "ul", "li"] },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any).from(clonedCv).save();
 
       track("pdf_downloaded");
-    } catch (e) { console.error(e); } finally { setDownloading(false); }
+    } catch { /* silent */ } finally {
+      styleTag?.remove();
+      pdfRoot?.remove();
+      setDownloading(false);
+    }
   };
 
   return (
