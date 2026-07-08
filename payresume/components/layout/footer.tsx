@@ -63,7 +63,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 pt-6 border-t border-white/20 text-center text-sm text-white/50">
-          © 2025 PayResume — Built with AI, Love &amp; Sharp Corners.
+          © 2026 PayResume — Built with AI, Love &amp; Sharp Corners.
         </div>
       </div>
     </footer>

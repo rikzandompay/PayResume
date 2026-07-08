@@ -14,8 +14,8 @@ export default function AboutPage() {
 
         <div className="brutal-card mb-6">
           <div className="flex items-center gap-3 mb-4"><Heart size={24} className="text-red" /><h2 className="font-display font-bold text-xl">Misi Kami</h2></div>
-          <p className="font-body text-muted leading-relaxed mb-4">PayResume lahir dari kenyataan bahwa terlalu banyak pencari kerja Indonesia — terutama fresh graduate — yang gagal lolos screening awal bukan karena kemampuan mereka kurang, tapi karena CV mereka tidak ATS-friendly.</p>
-          <p className="font-body text-muted leading-relaxed">Kami membangun PayResume agar siapapun bisa membuat CV profesional dalam hitungan menit, tanpa perlu skill desain, tanpa biaya, dan tanpa ribet. Cukup isi data, biarkan AI yang bekerja.</p>
+          <p className="font-body text-muted leading-relaxed mb-4">PayResume di buat bagi orang yang ingin membuat CV profesional namun bingung dengan desain nya,dan cara penulisan nya. oleh karna itu pengembang terInspirasi membuat payresume ini agar semua orang bisa membuat CV profesional dalam hitungan menit, tanpa perlu skill desain, tanpa biaya, dan tanpa ribet. bagi pelamar kerja</p>
+          <p className="font-body text-muted leading-relaxed">Kami membangun PayResume berniat memudahkan pelamar pekerjaan dalam membuat CV yang profesional, dengan memanfaatkan AI untuk bekerja.</p>
         </div>
 
         <div className="brutal-card mb-6">

@@ -4,6 +4,8 @@ import { extractTextFromPDF } from "@/lib/pdf-parser";
 import { CVResult } from "@/lib/types";
 
 export const runtime = "nodejs";
+export const maxDuration = 60; // 60 seconds limit for Vercel
+
 
 export async function POST(req: NextRequest) {
   try {

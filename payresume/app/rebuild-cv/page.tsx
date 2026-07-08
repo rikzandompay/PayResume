@@ -55,8 +55,15 @@ export default function RebuildCVPage() {
       const res = await fetch("/api/rebuild-cv", { method: "POST", body: formData });
 
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Gagal rebuild CV");
+        let errMessage = "Gagal rebuild CV (Sistem sibuk atau timeout).";
+        try {
+          const err = await res.json();
+          errMessage = err.error || errMessage;
+        } catch (jsonErr) {
+          // If response is not valid JSON (e.g., Vercel 504 Gateway Timeout HTML page)
+          console.error("Non-JSON error response from server", jsonErr);
+        }
+        throw new Error(errMessage);
       }
 
       const result = await res.json();

@@ -82,8 +82,14 @@ export default function CreateCVPage() {
       });
 
       if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Gagal generate CV");
+        let errMessage = "Gagal generate CV (Sistem sibuk atau timeout).";
+        try {
+          const err = await res.json();
+          errMessage = err.error || errMessage;
+        } catch (jsonErr) {
+          console.error("Non-JSON error response from server", jsonErr);
+        }
+        throw new Error(errMessage);
       }
 
       const result = await res.json();

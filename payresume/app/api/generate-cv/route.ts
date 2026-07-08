@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateWithGemini, sanitizeInput, parseAIResponse } from "@/lib/gemini";
 import { CVResult } from "@/lib/types";
 
+export const maxDuration = 60; // 60 seconds limit for Vercel
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
